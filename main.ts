@@ -1,4 +1,4 @@
-import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-board.ts';
@@ -14,8 +14,7 @@ const rows=buildBoard(snapshot); const issue=boardIssue(rows);
 if(issue) { console.error(issue); process.exit(1); }
 mkdirSync(out,{recursive:true}); mkdirSync(resolve(out,'dashboard'),{recursive:true}); mkdirSync(resolve(out,'screenshots'),{recursive:true});
 writeFileSync(resolve(out,'board.json'),JSON.stringify({rows},null,2)+'\n');
-const script=dataScript(snapshot,rows); writeFileSync(resolve(root,'data.js'),script); writeFileSync(resolve(out,'data.js'),script);
-rmSync(resolve(root,'dashboard/data.js'),{force:true});
+const script=dataScript(snapshot,rows); writeFileSync(resolve(out,'data.js'),script);
 cpSync(resolve(root,'dashboard'),resolve(out,'dashboard'),{recursive:true,force:true});
 cpSync(resolve(root,'screenshots'),resolve(out,'screenshots'),{recursive:true,force:true});
 if(readdirSync(resolve(out,'screenshots')).filter(n=>/\.(?:png|jpe?g)$/i.test(n)).length<3){console.error('fewer than 3 screenshots');process.exit(1);}
